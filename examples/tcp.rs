@@ -73,7 +73,7 @@ impl LanguageServer for Backend {
             .log_message(MessageType::Info, "command executed!")
             .await;
 
-        match self.client.apply_edit(WorkspaceEdit::default()).await {
+        match self.client.apply_edit(WorkspaceEdit::default(), None).await {
             Ok(res) if res.applied => self.client.log_message(MessageType::Info, "applied").await,
             Ok(_) => self.client.log_message(MessageType::Info, "rejected").await,
             Err(err) => self.client.log_message(MessageType::Error, err).await,
@@ -118,7 +118,7 @@ impl LanguageServer for Backend {
 async fn main() {
     env_logger::init();
 
-    let mut listener = TcpListener::bind("127.0.0.1:9257").await.unwrap();
+    let listener = TcpListener::bind("127.0.0.1:9257").await.unwrap();
     let (stream, _) = listener.accept().await.unwrap();
     let (read, write) = tokio::io::split(stream);
 
