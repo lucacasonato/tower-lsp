@@ -95,7 +95,7 @@ where
 
         let mut framed_stdin = FramedRead::new(self.stdin, LanguageServerCodec::default());
         let framed_stdout = FramedWrite::new(self.stdout, LanguageServerCodec::default());
-        let responses = receiver.buffered(4).filter_map(future::ready);
+        let responses = receiver.buffered(16).filter_map(future::ready);
         let interleave = self.interleave.fuse();
 
         let printer = stream::select(responses, interleave)
